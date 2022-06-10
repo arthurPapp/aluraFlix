@@ -23,6 +23,7 @@ public class VideoEntity implements Serializable {
     private String titulo;
     private String descricao;
     private String url;
+    private CategoriaEntity categoria;
 
     public VideoEntity(){}
 
@@ -30,6 +31,12 @@ public class VideoEntity implements Serializable {
         this.titulo=titulo;
         this.descricao=descricao;
         this.url=url;
+    }
+    public VideoEntity(String titulo, String descricao, String url ,CategoriaEntity categoria){
+        this.titulo=titulo;
+        this.descricao=descricao;
+        this.url=url;
+        this.categoria=categoria;
     }
 
     public VideoEntity convertAtt(VideoRequest request, VideoEntity videoEntityBanco){

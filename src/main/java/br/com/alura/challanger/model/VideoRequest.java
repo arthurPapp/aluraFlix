@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.validation.annotation.Validated;
 
@@ -19,6 +20,8 @@ import javax.validation.constraints.Size;
 @Validated
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VideoRequest {
+
+    final static String ID_CATEGORIA = "629fd178ad110e712a4e596e";
 
     @NotBlank(message = "Id do video não pode ser nulo", groups = { PutChecks.class })
     private String id;
@@ -36,6 +39,15 @@ public class VideoRequest {
     //@Pattern(regexp = "([a-zA-Z]{3,})://([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?")
     @URL(message = "url invalida")
     private String url;
+
+    private String idCategoria;
+
+
+    public String getIdCategoria() {
+        if(StringUtils.isBlank(this.idCategoria))
+            return ID_CATEGORIA;
+        return idCategoria;
+    }
 
     public VideoRequest(){}
 

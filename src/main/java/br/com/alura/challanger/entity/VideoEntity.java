@@ -39,12 +39,12 @@ public class VideoEntity implements Serializable {
         this.categoria=categoria;
     }
 
-    public VideoEntity convertAtt(VideoRequest request, VideoEntity videoEntityBanco){
+    public VideoEntity convertAtt(VideoRequest request, VideoEntity videoEntityBanco,CategoriaEntity categoria){
 
         videoEntityBanco.setUrl(request.getUrl());
         videoEntityBanco.setTitulo(request.getTitulo());
         videoEntityBanco.setDescricao(request.getDescricao());
-
+        videoEntityBanco.setCategoria(categoria);
         return videoEntityBanco;
     }
 

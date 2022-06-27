@@ -5,6 +5,7 @@ import br.com.alura.challanger.model.VideoRequest;
 import br.com.alura.challanger.service.VideoService;
 import br.com.alura.challanger.validator.group.PutChecks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -29,10 +30,10 @@ public class VideoController {
     VideoService videoService;
 
     @GetMapping
-    public ResponseEntity<List<Video>> listarVideos(@RequestParam("page") @Min(value = 1, message = "O valor informado deve ser maior ou igual a 1") Integer page,
+    public ResponseEntity<Page<Video>> listarVideos(@RequestParam("page") @Min(value = 1, message = "O valor informado deve ser maior ou igual a 1") Integer page,
                                                     @RequestParam  @Min(value = 1, message = "O valor informado deve ser maior ou igual a 1") Integer qtd){
             Pageable paginacao = PageRequest.of(page-1,qtd);
-            return new ResponseEntity<List<Video>>(videoService.getVideo(paginacao), HttpStatus.OK);
+            return new ResponseEntity<Page<Video>>(videoService.getVideo(paginacao), HttpStatus.OK);
     }
     @GetMapping("/{id}")
     public ResponseEntity<Video> getVideoId( @PathVariable("id") @NotBlank(message = "id não pode ser nulo!") String id){

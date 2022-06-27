@@ -6,6 +6,7 @@ import br.com.alura.challanger.model.Categoria;
 import br.com.alura.challanger.model.CategoriaRequest;
 import br.com.alura.challanger.model.Video;
 import br.com.alura.challanger.repository.CategoriaMongoRepository;
+import br.com.alura.challanger.repository.VideoMongorepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,9 @@ public class CategoriaService {
     @Autowired
     CategoriaMongoRepository categoriaMongoRepository;
 
+    @Autowired
+    VideoMongorepository videoMongorepository;
+
     public Categoria inserirCategoria(CategoriaRequest categoriaRequest) {
         try{
             CategoriaEntity entity = categoriaMongoRepository.save(new CategoriaEntity(categoriaRequest.getTitulo(),categoriaRequest.getCor()));
@@ -31,14 +35,13 @@ public class CategoriaService {
         }
     }
 
-    public List<Categoria> getCategorias(Pageable paginacao) {
+    public Page<Categoria> getCategorias(Pageable paginacao) {
         try{
             Page<CategoriaEntity> entity = categoriaMongoRepository.findAll(paginacao);
-            List<Categoria> response = new ArrayList<>();
-            if(!entity.getContent().isEmpty())
-                entity.forEach(categoriaEntity -> response.add(new Categoria(categoriaEntity.getId(),categoriaEntity.getTitulo(), categoriaEntity.getCor())) );
 
-            return response;
+            return new Categoria().convertPage(entity);
+
+
         }catch (Exception e){
             throw  e;
         }
@@ -48,9 +51,23 @@ public class CategoriaService {
         return new Categoria(entity.getId(), entity.getTitulo(), entity.getCor());
     }
 
-    public Categoria atualizaVideo(CategoriaRequest categoriaRequest) {
+    public Categoria atualizaCategoria(CategoriaRequest categoriaRequest) {
         CategoriaEntity entity = categoriaMongoRepository.findById(categoriaRequest.getId()).orElseThrow(() -> new BadRequestException("Parametro não encontrado"));
         entity.convert(entity, categoriaRequest);
         return new Categoria().convert(categoriaMongoRepository.save(entity));
+    }
+
+    public String deletarCategoria(String id) {
+        CategoriaEntity entity = categoriaMongoRepository.findById(id).orElseThrow(() -> new BadRequestException("Parametro não encontrado"));
+        categoriaMongoRepository.deleteById(id);
+        return "{\"Status\":\"DELETADO\"}";
+    }
+
+    public Page<Video> getVideoPorCategoria(Pageable paginacao, String id) {
+        Page<VideoEntity> videosEntities = videoMongorepository.findVideoCategoriaId(paginacao, id);
+        if(!videosEntities.getContent().isEmpty())
+            return new Video().convertPage(videosEntities);
+
+        return null;
     }
 }

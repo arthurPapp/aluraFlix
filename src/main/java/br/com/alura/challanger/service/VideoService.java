@@ -42,14 +42,13 @@ public class VideoService {
 
     }
 
-    public List<Video> getVideo(Pageable paginacao){
+    public Page<Video> getVideo(Pageable paginacao){
         Page<VideoEntity> videosEntities = videoMongorepository.findAll(paginacao);
-        List<Video> response = new ArrayList<>();
         if(!videosEntities.getContent().isEmpty())
-            videosEntities.forEach(videoEntity -> response.add(new Video(videoEntity.getId(), videoEntity.getTitulo(),videoEntity.getDescricao(),videoEntity.getUrl())));
+           return new Video().convertPage(videosEntities);
 
 
-        return response;
+        return null;
     }
 
     public Video getVideoId(String id){
@@ -57,9 +56,12 @@ public class VideoService {
         return new Video(videosEntities.getId(), videosEntities.getTitulo(),videosEntities.getDescricao(),videosEntities.getUrl());
     }
 
+
+
     public Video atualizaVideo(VideoRequest request){
         VideoEntity videosEntities = videoMongorepository.findById(request.getId()).orElseThrow(() -> new BadRequestException("Parametro não encontrado"));
-        videosEntities.convertAtt(request,videosEntities);
+        CategoriaEntity categoria = categoriaMongoRepository.findById(request.getIdCategoria()).orElseThrow(() -> new BadRequestException("id categoria não encontrado!"));
+        videosEntities.convertAtt(request,videosEntities, categoria);
         return new Video().convert(videoMongorepository.save(videosEntities));
     }
 
@@ -68,4 +70,7 @@ public class VideoService {
         videoMongorepository.deleteById(id);
         return "{\"Status\":\"DELETADO\"}";
     }
+
+
+
 }

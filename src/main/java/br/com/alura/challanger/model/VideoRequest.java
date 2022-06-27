@@ -1,5 +1,6 @@
 package br.com.alura.challanger.model;
 
+import br.com.alura.challanger.constant.CategoriaConst;
 import br.com.alura.challanger.validator.group.PutChecks;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,7 +22,7 @@ import javax.validation.constraints.Size;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VideoRequest {
 
-    final static String ID_CATEGORIA = "629fd178ad110e712a4e596e";
+
 
     @NotBlank(message = "Id do video não pode ser nulo", groups = { PutChecks.class })
     private String id;
@@ -45,7 +46,7 @@ public class VideoRequest {
 
     public String getIdCategoria() {
         if(StringUtils.isBlank(this.idCategoria))
-            return ID_CATEGORIA;
+            return CategoriaConst.ID_CATEGORIA;
         return idCategoria;
     }
 

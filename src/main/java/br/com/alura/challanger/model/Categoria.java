@@ -4,6 +4,7 @@ import br.com.alura.challanger.entity.CategoriaEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 @Getter
 @Setter
@@ -21,7 +22,18 @@ public class Categoria {
         this.cor=cor;
     }
 
+    public Categoria(CategoriaEntity categoriaEntity) {
+        this.id=categoriaEntity.getId();
+        this.titulo=categoriaEntity.getTitulo();
+        this.cor=categoriaEntity.getCor();
+    }
+
     public Categoria convert(CategoriaEntity entrada){
         return new Categoria(entrada.getId(),entrada.getTitulo(),entrada.getCor());
     }
+
+    public static Page<Categoria> convertPage(Page<CategoriaEntity> categorias){
+        return categorias.map(Categoria::new);
+    }
+
 }

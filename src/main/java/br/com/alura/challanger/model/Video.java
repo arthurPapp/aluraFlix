@@ -5,6 +5,7 @@ import br.com.alura.challanger.entity.VideoEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 @Getter
 @Setter
@@ -26,8 +27,19 @@ public class Video {
         this.url=url;
     }
 
+    public Video(VideoEntity videoEntity) {
+        this.id=videoEntity.getId();
+        this.titulo=videoEntity.getTitulo();
+        this.descricao=videoEntity.getDescricao();
+        this.url=videoEntity.getUrl();
+        this.categoria=new Categoria().convert(videoEntity.getCategoria());
+    }
+
 
     public Video convert(VideoEntity entrada){
-        return new Video(entrada.getId(), entrada.getTitulo(), entrada.getDescricao(), entrada.getUrl());
+        return new Video(entrada.getId(), entrada.getTitulo(), entrada.getDescricao(), entrada.getUrl(), new Categoria().convert(entrada.getCategoria()));
+    }
+    public Page<Video> convertPage(Page<VideoEntity> videos){
+        return videos.map(Video::new);
     }
 }
